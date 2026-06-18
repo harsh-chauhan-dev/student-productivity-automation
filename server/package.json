@@ -15,11 +15,12 @@
   "type": "module",
   "main": "server.js",
   "scripts": {
-    "dev":"nodemon server.js",
+    "dev": "nodemon server.js",
     "start": "node server.js"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",
+    "cookie-parser": "^1.4.7",
     "cookies-parser": "^1.2.0",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",

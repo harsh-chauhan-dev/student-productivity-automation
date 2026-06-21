@@ -4,7 +4,8 @@ import cookieParser from 'cookie-parser';
 import pool from './src/config/db_config.js';
 import authRouter from './src/modules/auth/routes/auth.routes.js';
 import { errorHandler, notFoundHandler } from './src/middleware/error.handler.js';
-import  subjectRoute  from './src/modules/subject/router/subjectRouter.js';
+import subjectRoute from './src/modules/subject/router/subjectRouter.js';
+import  taskRoute  from './src/modules/Task//router/TaskRoute.js';
 
 dotenv.config();
 
@@ -40,6 +41,7 @@ app.get('/health', (req, res) => {
 // ==================== API ROUTES ====================
 app.use('/api/auth', authRouter);
 app.use('/api/subject', subjectRoute);
+app.use('/api/task', taskRoute);
 // ==================== TEST DATABASE CONNECTION ====================
 app.get('/api/db-test', async (req, res) => {
     try {

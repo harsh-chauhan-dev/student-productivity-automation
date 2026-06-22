@@ -5,8 +5,8 @@ import pool from './src/config/db_config.js';
 import authRouter from './src/modules/auth/routes/auth.routes.js';
 import { errorHandler, notFoundHandler } from './src/middleware/error.handler.js';
 import subjectRoute from './src/modules/subject/router/subjectRouter.js';
-import  taskRoute  from './src/modules/Task//router/TaskRoute.js';
-
+import  taskRoute  from './src/modules/Task/router/TaskRoute.js';
+import  subtaskRoute  from './src/modules/subtask/route/subtaskRoute.js';
 dotenv.config();
 
 const app = express();
@@ -42,6 +42,7 @@ app.get('/health', (req, res) => {
 app.use('/api/auth', authRouter);
 app.use('/api/subject', subjectRoute);
 app.use('/api/task', taskRoute);
+app.use('/api/subtasks', subtaskRoute);
 // ==================== TEST DATABASE CONNECTION ====================
 app.get('/api/db-test', async (req, res) => {
     try {

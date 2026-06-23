@@ -1,0 +1,1 @@
+export { default as StudySessionRoute } from './route/studyRoute.js';

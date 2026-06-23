@@ -6,7 +6,8 @@ import authRouter from './src/modules/auth/routes/auth.routes.js';
 import { errorHandler, notFoundHandler } from './src/middleware/error.handler.js';
 import subjectRoute from './src/modules/subject/router/subjectRouter.js';
 import  taskRoute  from './src/modules/Task/router/TaskRoute.js';
-import  subtaskRoute  from './src/modules/subtask/route/subtaskRoute.js';
+import subtaskRoute from './src/modules/subtask/route/subtaskRoute.js';
+import { NotesRoute } from './src/modules/Notes/index.js';
 dotenv.config();
 
 const app = express();
@@ -43,6 +44,7 @@ app.use('/api/auth', authRouter);
 app.use('/api/subject', subjectRoute);
 app.use('/api/task', taskRoute);
 app.use('/api/subtasks', subtaskRoute);
+app.use('/api/notes', NotesRoute);
 // ==================== TEST DATABASE CONNECTION ====================
 app.get('/api/db-test', async (req, res) => {
     try {

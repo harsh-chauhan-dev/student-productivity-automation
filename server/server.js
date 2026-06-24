@@ -2,13 +2,16 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import pool from './src/config/db_config.js';
-import authRouter from './src/modules/auth/routes/auth.routes.js';
+import { authRoute } from './src/modules/auth/index.js';
 import { errorHandler, notFoundHandler } from './src/middleware/error.handler.js';
 import subjectRoute from './src/modules/subject/router/subjectRouter.js';
 import  taskRoute  from './src/modules/Task/router/TaskRoute.js';
 import subtaskRoute from './src/modules/subtask/route/subtaskRoute.js';
 import { NotesRoute } from './src/modules/Notes/index.js';
 import { StudySessionRoute } from './src/modules/Study_session/index.js';
+import { ReminderRoute } from './src/modules/reminders/index.js';
+import { NotificationRoute } from './src/modules/notification/index.js';
+import startReminderJob from './src/modules/job/reminder_job.js';
 dotenv.config();
 
 const app = express();
@@ -41,12 +44,15 @@ app.get('/health', (req, res) => {
 });
 
 // ==================== API ROUTES ====================
-app.use('/api/auth', authRouter);
+app.use('/api/auth', authRoute);
 app.use('/api/subject', subjectRoute);
 app.use('/api/task', taskRoute);
 app.use('/api/subtasks', subtaskRoute);
 app.use('/api/notes', NotesRoute);
 app.use('/api/session', StudySessionRoute);
+app.use('/api/reminder', ReminderRoute);
+app.use('/notification', NotificationRoute);
+startReminderJob();
 // ==================== TEST DATABASE CONNECTION ====================
 app.get('/api/db-test', async (req, res) => {
     try {

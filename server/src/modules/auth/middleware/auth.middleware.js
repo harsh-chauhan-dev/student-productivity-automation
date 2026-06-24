@@ -6,8 +6,8 @@ dotenv.config();
 export const auth = async (req, res, next) => {
     try {
         const token = req.cookies?.token;
-        console.log("Cookies:", req.cookies);
-    console.log("Headers:", req.headers.cookie);
+        // console.log("Cookies:", req.cookies);
+    // console.log("Headers:", req.headers.cookie);
         if (!token) {
             return res.status(401).json({
                 success: false,

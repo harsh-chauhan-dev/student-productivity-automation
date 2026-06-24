@@ -1,0 +1,1 @@
+export { default as NotificationRoute } from './route/notificationRoute.js';

@@ -1,0 +1,1 @@
+export { default as ReminderRoute } from './route/reminderRoute.js';

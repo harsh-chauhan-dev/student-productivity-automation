@@ -11,7 +11,9 @@ import { NotesRoute } from './src/modules/Notes/index.js';
 import { StudySessionRoute } from './src/modules/Study_session/index.js';
 import { ReminderRoute } from './src/modules/reminders/index.js';
 import { NotificationRoute } from './src/modules/notification/index.js';
-import startReminderJob from './src/modules/job/reminder_job.js';
+import startReminderJob from './src/modules/job/reminder.job.js';
+import { DashBoardRoute } from './src/modules/Analytics/index.js';
+
 dotenv.config();
 
 const app = express();
@@ -52,7 +54,8 @@ app.use('/api/notes', NotesRoute);
 app.use('/api/session', StudySessionRoute);
 app.use('/api/reminder', ReminderRoute);
 app.use('/notification', NotificationRoute);
-startReminderJob();
+app.use('/api/analytics', DashBoardRoute);
+
 // ==================== TEST DATABASE CONNECTION ====================
 app.get('/api/db-test', async (req, res) => {
     try {
@@ -79,6 +82,8 @@ app.use(notFoundHandler);
 // Global Error Handler (must be last)
 app.use(errorHandler);
 
+
+startReminderJob();
 // ==================== SERVER STARTUP ====================
 const startServer = async () => {
     try {
@@ -98,8 +103,10 @@ const startServer = async () => {
 ║  Health Check: http://localhost:${port}/health        ║
 ║  DB Test: http://localhost:${port}/api/db-test        ║
 ╚══════════════════════════════════════════════════════ ╝
-            `);
+             `);
+            
         });
+       
     } catch (error) {
         console.error('✗ Failed to start server:', error.message);
         process.exit(1);

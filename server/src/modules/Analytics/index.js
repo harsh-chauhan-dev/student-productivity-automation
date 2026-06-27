@@ -1,0 +1,1 @@
+export { default as DashBoardRoute } from './route/dashBoradRoute.js';

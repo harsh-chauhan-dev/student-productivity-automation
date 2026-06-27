@@ -42,7 +42,7 @@ export const getAllSubject = async (req, res) => {
 }
 
 export const getSubjectById = async (req, res) => {
-    const { id } = req.params.id;
+    const { id } = req.params;
     if (!id) {
         return res.status(401).json({
             success: false,

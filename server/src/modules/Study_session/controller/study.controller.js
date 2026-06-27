@@ -125,7 +125,7 @@ export const endStudySession = async (req, res) => {
         );
 
         const result = await pool.query(
-            `UPDATE study_sessionS
+            `UPDATE study_sessions
             SET 
             ended_at=NOW(),
             duration_minutes=$1 

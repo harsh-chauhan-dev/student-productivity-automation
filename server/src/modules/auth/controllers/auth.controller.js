@@ -6,7 +6,7 @@ import { generateAccessToken, generateRefreshToken } from '../../../utils/genera
 const cookieOptions = {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production', // true in production, false in development
-    sameSite: 'strict'
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax'
 };
 // Register User
 export const registerUser = async (req, res) => {
@@ -171,8 +171,9 @@ export const logoutUser = async (req, res) => {
 
     try {
 
-        await pool.query(`UPDATE users SET refresh_token = NULL
-        WHERE id=$1`, [res.user.id]);
+        if (req.user?.id) {
+            await pool.query(`UPDATE users SET refresh_token = NULL WHERE id=$1`, [req.user.id]);
+        }
 
         res.clearCookie("token");
         res.clearCookie("refreshToken");
@@ -195,7 +196,7 @@ export const logoutUser = async (req, res) => {
 //  Refresh Token 
 export const refreshAccessToken = async (req, res) => {
     try {
-        const refreshToken = req.cookie?.refreshToken;
+        const refreshToken = req.cookies?.refreshToken || req.cookies?.token;
         if (!refreshToken) {
             return res.status(401).json({
                 success: false,

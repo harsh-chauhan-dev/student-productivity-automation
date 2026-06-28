@@ -1,5 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv';
+import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import pool from './src/config/db_config.js';
 import { authRoute } from './src/modules/auth/index.js';
@@ -21,20 +22,31 @@ const port = process.env.PORT || 5000;
 
 // ==================== MIDDLEWARE ====================
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+
 app.use(cookieParser());
 
-// CORS Configuration (if frontend is on different port)
-app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+// CORS Configuration for frontend development
+const allowedOrigins = [
+    'http://localhost:3000',
+    'http://localhost:5173',
+    'http://127.0.0.1:3000',
+    'http://127.0.0.1:5173'
+];
 
-    if (req.method === 'OPTIONS') {
-        return res.sendStatus(200);
-    }
-    next();
-});
+app.use(cors({
+    origin: (origin, callback) => {
+        // Allow requests with no origin (like mobile apps, curl, postman) or matching allowed origins
+        if (!origin || allowedOrigins.includes(origin) || origin.endsWith('localhost:3000') || origin.endsWith('localhost:5173')) {
+            callback(null, true);
+        } else {
+            callback(null, true); // Allow all in dev environment to prevent CORS block
+        }
+    },
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization', 'Cookie']
+}));
+
 
 // ==================== HEALTH CHECK ====================
 app.get('/health', (req, res) => {

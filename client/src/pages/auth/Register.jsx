@@ -1,156 +1,53 @@
-import { Link } from "react-router-dom";
-import Card from "../../component/ui/Card.jsx";
-import Input from "../../component/ui/Input.jsx";
-import Button from "../../component/ui/Button.jsx";
-import Illustration from '../../assets/register.svg';
-import { register } from "../../services/auth.service.js";
 import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { registerUser } from "../../services/auth.service";
+import Card from "../../component/ui/Card";
+import Input from "../../component/ui/Input";
+import Button from "../../component/ui/Button";
 
-function Register() {
-  const [fromData, setFromData] = useState({
-    name: "",
-    email: "",
-    password: "",
-    confirmPassword:""
-  });
+export default function Register() {
+  const navigate = useNavigate();
+  const [form, setForm] = useState({ name: "", email: "", password: "" });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
-  const handleChnage = (e) => {
-    const { name, value } = e.target;
-    setFromData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-
-  }
-
-  const handleSubmit =  async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
+    setSuccess("");
+    setLoading(true);
+
     try {
-      const response = await register(fromData);
-      console.log(response.data);
-
-    } catch (error) {
-      console.error(error.response?.data);
+      await registerUser(form);
+      setSuccess("Account created. Please sign in.");
+      setTimeout(() => navigate("/login"), 800);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
     }
-  }
+  };
+
   return (
-    <main className="min-h-screen bg-slate-100">
-    <div className="mx-auto flex min-h-screen max-w-7xl flex-col lg:flex-row items-center justify-between gap-10 px-6 py-8 lg:px-12">
-        {/* Left Side */}
-    <section className="hidden lg:flex lg:w-1/2 flex-col justify-center pr-8 xl:pr-16">
-
-         <h1 className="mb-4 text-4xl md:text-5xl xl:text-6xl font-extrabold tracking-tight text-slate-900 leading-tight">
-            Student Productivity
-          </h1>
-
-         <p className="mb-8 max-w-lg text-base md:text-lg leading-8 text-slate-600">
-            Create an account and start managing your studies smarter.
-          </p>
-
-          <img
-            src={Illustration}
-            alt="Register Illustration"
-            className=" w-full
-        max-w-sm
-        md:max-w-md
-        lg:max-w-lg
-        xl:max-w-xl
-        h-auto
-        object-contain
-        mx-auto
-        select-none"
-          />
-
-        </section>
-
-        {/* Right Side */}
-
-        <section className="w-full max-w-lg lg:max-w-md xl:max-w-lg lg:w-[45%]">
-
-          <Card>
-
-            <h2 className="mb-2 text-3xl md:text-4xl font-bold tracking-tight">
-              Create Account 
-            </h2>
-
-           <p className="mb-8 text-sm md:text-base text-gray-500">
-              Join and organize your academic life.
-            </p>
-
-            <form onSubmit={handleSubmit} className="space-y-6">
-
-              <Input
-                label="Full Name"
-                name='name'
-                value={fromData.name}
-                onChange={handleChnage}
-                placeholder="Enter your name"
-              />
-
-              <Input
-                label="Email"
-                type="email"
-                name='email'
-                value={fromData.email}
-                onChange={handleChnage}
-                placeholder="Jon@gmail.com"
-              />
-
-              <Input
-                label="Password"
-                type="password"
-                name='password'
-                value={fromData.password}
-                onChange={handleChnage}
-                placeholder=" ******** "
-              />
-
-              <Input
-                label="Confirm Password"
-                name='password'
-                type="password"
-                email='password'
-                value={fromData.confrom_password}
-                onChange={handleChnage}
-                placeholder="********"
-              />
-
-              <label className="flex items-start gap-3 text-sm leading-6 text-gray-600 cursor-pointer">
-
-                <input
-                  type="checkbox"
-                  className="mt-1 cursor-pointer "
-                />
-
-                <span>
-                  I agree to the Terms & Conditions and Privacy Policy.
-                </span>
-
-              </label>
-
-              <Button type="submit">
-                Create Account
-              </Button>
-
-            </form>
-
-            <p className="mt-8 text-center text-sm text-gray-600">
-
-              Already have an account?
-
-              <Link
-                to="/login"
-                className="ml-2 font-semibold text-blue-600 hover:underline"
-              >
-                Login
-              </Link>
-            </p>
-          </Card>
-        </section>
-
-      </div>
-    </main>
+    <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6">
+      <Card className="w-full max-w-md p-8">
+        <div className="mb-6 text-center">
+          <h1 className="text-2xl font-semibold text-slate-800">Create account</h1>
+          <p className="text-sm text-slate-500">Start organizing your study life</p>
+        </div>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {error ? <p className="text-sm text-red-600">{error}</p> : null}
+          {success ? <p className="text-sm text-green-600">{success}</p> : null}
+          <Input label="Name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
+          <Input label="Email" type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} required />
+          <Input label="Password" type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} required />
+          <Button loading={loading} type="submit">Register</Button>
+        </form>
+        <p className="text-sm mt-4 text-center text-slate-600">
+          Already have an account? <Link to="/login" className="text-blue-600">Sign in</Link>
+        </p>
+      </Card>
+    </div>
   );
 }
-
-export default Register;

@@ -1,14 +1,6 @@
 import api from "./api";
 
-export const login = (data) => {
-    return api.post('/auth/login', data);
-}
-export const register = (data) => {
-    return api.post('/auth/register', data);
-};
-export const layout = () => {
-    return api.post('/auth/logout');
-};
-export const getProfile = () => {
-    return api.get('/auth/profile');
-};
+export const loginUser = (payload) => api.post("/auth/login", payload);
+export const registerUser = (payload) => api.post("/auth/register", payload);
+export const logoutUser = () => api.post("/auth/logout");
+export const getProfile = () => api.get("/auth/profile");

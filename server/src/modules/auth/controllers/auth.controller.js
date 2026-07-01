@@ -70,6 +70,7 @@ export const registerUser = async (req, res) => {
 // Login User
 
 export const loginUser = async (req, res) => {
+    console.log("Login endpoint called");
     const { email, password } = req.body;
     if (!email || !password) {
         return res.status(400).json({
@@ -116,6 +117,7 @@ export const loginUser = async (req, res) => {
         res.status(200).json({
             success: true,
             message: "Login successful",
+            token: accessToken,
             user: safeUser
         });
 
@@ -195,6 +197,7 @@ export const logoutUser = async (req, res) => {
 
 //  Refresh Token 
 export const refreshAccessToken = async (req, res) => {
+    console.log("Refresh endpoint called");
     try {
         const refreshToken = req.cookies?.refreshToken || req.cookies?.token;
         if (!refreshToken) {
